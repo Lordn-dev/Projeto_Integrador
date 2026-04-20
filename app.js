@@ -4,6 +4,7 @@ const validarCPF = (cpf) => {
     // bypass mock
     if (cpf === '00000000000') return true;
     if (cpf === '11111111111') return true;
+    if (cpf === '22222222222') return true;
 
     if (!cpf) return false;
     cpf = cpf.replace(/[^\d]+/g, '');
@@ -23,9 +24,9 @@ createApp({
         const salaEscolhida = ref(null);
         const minhasReservas = ref([]);
 
-        const formLogin = ref({ cpf: '', senha: '' }); 
-        const formReg = ref({ nome: '', email: '', cpf: '', senha: '' });
-
+        const formLogin = ref({ cpf: '', senha: '' });
+        const formReg = ref({ nome: '', email: '', confirmacaoEmail: '', setor: '', cpf: '', senha: '', confirmacaoSenha: '' });
+        
         const mes = ref(new Date().getMonth());
         const ano = ref(new Date().getFullYear());
         const diaEscolhido = ref(null);
@@ -72,6 +73,12 @@ createApp({
 
         const acaoRegistro = async () => {
             if (!validarCPF(formReg.value.cpf)) return alert("CPF inválido.");
+            
+            if (formReg.value.email !== formReg.value.confirmacaoEmail) return alert("Os e-mails não coincidem.");
+            if (!/^\d{6}$/.test(formReg.value.senha)) return alert("A senha deve ser numérica e ter 6 dígitos.");
+            if (formReg.value.senha !== formReg.value.confirmacaoSenha) return alert("As senhas não coincidem.");
+            if (!formReg.value.setor) return alert("O setor é obrigatório.");
+
             await apiServico.registrar(formReg.value);
             alert("Cadastro realizado. Faça o login.");
             tela.value = 'login';
@@ -112,25 +119,28 @@ createApp({
         };
 
         const acaoReservar = async (h) => {
-            if (h.minhaReserva || h.naFila) return;
+            // if (h.minhaReserva || h.naFila) return;
+            if (h.minhaReserva) return;
 
             const dataFormatada = `${String(diaEscolhido.value).padStart(2, '0')}/${String(mes.value + 1).padStart(2, '0')}/${ano.value}`;
             const dataIso = `${ano.value}-${String(mes.value + 1).padStart(2, '0')}-${String(diaEscolhido.value).padStart(2, '0')}`;
 
             if (h.vago) {
                 if (confirm(`Confirmar agendamento: ${salaEscolhida.value} - ${dataFormatada} às ${h.tempo}?`)) {
-                    await apiServico.salvarReserva(usuarioLogado.value.id, salaEscolhida.value, dataFormatada, dataIso, h.tempo, 'Confirmada');
+                    await apiServico.salvarReserva(usuarioLogado.value.id, usuarioLogado.value.nome, usuarioLogado.value.setor, salaEscolhida.value, dataFormatada, dataIso, h.tempo,  'Confirmada');
+
                     alert("Reserva confirmada.");
                     await selecionarDia(diaEscolhido.value);
                     await carregarOcupacaoCalendario(); 
                 }
-            } else {
+            }
+            /* else {
                 if (confirm(`Horário ocupado. Entrar na fila de espera?`)) {
                     await apiServico.salvarReserva(usuarioLogado.value.id, salaEscolhida.value, dataFormatada, dataIso, h.tempo, 'Fila de Espera');
                     alert("Fila de espera confirmada.");
                     await selecionarDia(diaEscolhido.value);
                 }
-            }
+            } */
         };
 
         const acaoCancelarReserva = async (reserva) => {

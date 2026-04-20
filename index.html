@@ -11,12 +11,12 @@
 <body class="bg-gray-100 text-gray-800">
     <div id="app" class="min-h-screen flex flex-col" v-cloak>
         
-        <header class="bg-slate-800 text-white border-b-4 border-blue-600 shadow-md p-4">
+        <header class="cabecalho-principal">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="bg-white p-2 rounded-lg shadow-sm flex items-center gap-2 text-blue-600">
+                    <div class="bg-white p-2 rounded-lg shadow-sm flex items-center gap-2 texto-primario">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z"/></svg>
-                        <span class="font-black text-lg tracking-widest text-slate-800">RESERVAS<span class="text-blue-600">.TEST</span></span>
+                        <span class="font-black text-lg tracking-widest text-slate-800">RESERVAS<span class="texto-primario">.TEST</span></span>
                     </div>
                 </div>
                 
@@ -27,47 +27,59 @@
                     <button @click="sairSistema" class="text-xs font-bold hover:text-blue-400 transition bg-white text-slate-800 px-3 py-1 rounded">Sair</button>
                 </div>
             </div>
-        </header>
+            </header>
 
         <main class="container mx-auto p-4 flex-1">
             
-            <section v-if="tela === 'login'" class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-xl border-t-8 border-blue-600">
+            <section v-if="tela === 'login'" class="card-auth">
                 <h2 class="text-xl font-bold mb-6 text-center text-slate-800">Acesso Interno</h2>
 
                 <form @submit.prevent="acaoLogin" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">CPF</label>
-                        <input v-model="formLogin.cpf" type="text" required placeholder="000.000.000-00" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none transition">
+                        <label class="label-padrao">CPF</label>
+                        <input v-model="formLogin.cpf" type="text" required class="input-padrao">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">Senha</label>
-                        <input v-model="formLogin.senha" type="password" required class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 outline-none transition">
+                        <label class="label-padrao">Senha</label>
+                        <input v-model="formLogin.senha" type="password" required pattern="\d{6}" maxlength="6" inputmode="numeric" class="input-padrao">
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition shadow-md">ENTRAR</button>
-                    <button @click="tela = 'registro'" type="button" class="w-full text-sm text-blue-600 hover:underline mt-2">Criar nova conta</button>
+                    <button type="submit" class="btn-primario">ENTRAR</button>
+                    <button @click="tela = 'registro'" type="button" class="w-full text-sm mt-2 link-primario">Criar nova conta</button>
                 </form>
             </section>
 
-            <section v-if="tela === 'registro'" class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-xl border-t-8 border-indigo-600">
+           <section v-if="tela === 'registro'" class="card-auth">
                 <h2 class="text-xl font-bold mb-6 text-center text-slate-800">Novo Cadastro</h2>
                 <form @submit.prevent="acaoRegistro" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">Nome Completo</label>
-                        <input v-model="formReg.nome" type="text" required class="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <label class="label-padrao">Nome Completo</label>
+                        <input v-model="formReg.nome" type="text" required class="input-padrao">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">E-mail Corporativo</label>
-                        <input v-model="formReg.email" type="email" required placeholder="usuario@empresa.com.br" class="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <label class="label-padrao">E-mail Institucional</label>
+                        <input v-model="formReg.email" type="email" required class="input-padrao">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">CPF</label>
-                        <input v-model="formReg.cpf" type="text" required class="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <label class="label-padrao">Confirmar E-mail</label>
+                        <input v-model="formReg.confirmacaoEmail" type="email" required class="input-padrao">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1 text-slate-600">Senha</label>
-                        <input v-model="formReg.senha" type="password" required class="w-full border p-2 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <label class="label-padrao">Setor</label>
+                        <input v-model="formReg.setor" type="text" required class="input-padrao">
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded hover:bg-indigo-700 transition shadow-md">REGISTRAR</button>
+                    <div>
+                        <label class="label-padrao">CPF (Apenas números)</label>
+                        <input v-model="formReg.cpf" type="text" required class="input-padrao">
+                    </div>
+                    <div>
+                        <label class="label-padrao">Senha (6 números)</label>
+                        <input v-model="formReg.senha" type="password" required pattern="\d{6}" maxlength="6" inputmode="numeric" class="input-padrao">
+                    </div>
+                    <div>
+                        <label class="label-padrao">Confirmar Senha</label>
+                        <input v-model="formReg.confirmacaoSenha" type="password" required pattern="\d{6}" maxlength="6" inputmode="numeric" class="input-padrao">
+                    </div>
+                    <button type="submit" class="btn-primario">REGISTRAR</button>
                     <button @click="tela = 'login'" type="button" class="w-full text-sm text-slate-500 mt-2 hover:underline">Voltar ao login</button>
                 </form>
             </section>
@@ -136,27 +148,32 @@
                                     <div v-for="h in horarios" :key="h.tempo" 
                                         class="flex items-center justify-between p-3 border rounded bg-white shadow-sm transition hover:shadow-md"
                                         :class="{
-                                            'border-l-4 border-l-purple-500 bg-purple-50': h.minhaReserva || h.naFila,
+                                            'border-l-4 border-l-purple-500 bg-purple-50': h.minhaReserva,
                                             'border-l-4 border-l-blue-500': h.vago,
-                                            'border-l-4 border-l-orange-500 opacity-80': !h.vago && !h.minhaReserva && !h.naFila
+                                            'border-l-4 border-l-orange-500 opacity-80': !h.vago && !h.minhaReserva
                                         }">
                                         
-                                        <div class="flex flex-col">
+                                        <div class="flex items-center gap-6">
+                                        <div class="flex flex-col min-w-[100px]">
                                             <span class="font-bold text-slate-800 text-sm">{{ h.tempo }}</span>
                                             
                                             <span v-if="h.minhaReserva" class="text-purple-600 text-[10px] font-bold uppercase tracking-wider">Sua Reserva</span>
-                                            <span v-else-if="h.naFila" class="text-purple-600 text-[10px] font-bold uppercase tracking-wider">Você está na fila</span>
                                             <span v-else-if="h.vago" class="text-blue-600 text-[10px] font-bold uppercase tracking-wider">Disponível</span>
                                             <span v-else class="text-orange-600 text-[10px] font-bold uppercase tracking-wider">Ocupado</span>
                                         </div>
 
-                                        <button v-if="!h.minhaReserva && !h.naFila" 
-                                                @click="acaoReservar(h)" 
-                                                :class="h.vago ? 'bg-blue-600 hover:bg-blue-700' : 'bg-orange-500 hover:bg-orange-600'"
-                                                class="text-white text-[11px] font-bold py-2 px-3 rounded shadow transition-colors uppercase tracking-wide">
-                                            {{ h.vago ? 'Reservar' : 'Fila' }}
-                                        </button>
+                                        <div v-if="!h.vago && usuarioLogado && usuarioLogado.role === 'sentinela'" 
+                                            class="flex flex-col border-l pl-4 border-slate-200 leading-tight">
+                                            <span class="text-xs font-semibold text-slate-700">{{ h.detalhesReserva?.nome }}</span>
+                                            <span class="text-[10px] text-slate-500 uppercase tracking-tighter">{{ h.detalhesReserva?.setor }}</span>
+                                        </div>
                                     </div>
+
+                                    <button v-if="h.vago" @click="acaoReservar(h)" class="btn-pequeno shadow">
+                                        Reservar
+                                    </button>
+                                        
+                                        </div>
                                 </div>
                                 
                                 <div v-else class="flex flex-col items-center justify-center flex-1 text-center text-slate-400 p-4">
